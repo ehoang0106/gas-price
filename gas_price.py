@@ -24,12 +24,12 @@ def search_gas_prices(location):
     driver.get("https://www.google.com/maps")
     
     search_box = driver.find_element(By.NAME, "q")
-    search_box.send_keys(f"gas stations near {location}")
+    search_box.send_keys(f"chevron gas stations near {location}")
     search_box.send_keys(Keys.RETURN)
     
     time.sleep(10)
     
-    gas_prices = []
+    gas_prices = [] #gas prices list
     results = driver.find_elements(By.CLASS_NAME, "Nv2PK")
     for result in results:
         name = result.find_element(By.CLASS_NAME, "NrDZNb").text
@@ -41,8 +41,9 @@ def search_gas_prices(location):
         spans = result.find_elements(By.CLASS_NAME, "W4Efsd")
         address = spans[2].text if len(spans) > 2 else "No address found."
         
-        address = address.replace('\ue934', '').strip() #remove the unicode character, this is an icon for a wheelchair 
-        
+        address = address.replace('\ue934', '').strip() #remove the unicode character, this is an icon for a wheelchair
+        address = address.replace('Gas station · ', '').strip() #"Gas station · " is a prefix for the address
+        price = price.replace(' *', '').strip() #remove the * character in price
         gas_prices.append({
             "station_name": name,
             "price": price,
@@ -58,7 +59,7 @@ if __name__ == "__main__":
     gas_prices = search_gas_prices(location)
     
     if gas_prices:
-        print("Gas prices near", location)
+        print("Chevron gas stations near", location)
         for station in gas_prices:
             print(station)
     else:
