@@ -12,6 +12,7 @@ import re
 def init_driver():
 
     options = Options()
+    options.add_argument("--headless")
     options.add_argument("--no-sandbox")
     options.add_argument("--disable-dev-shm-usage")
     options.add_argument("--log-level=3")  
@@ -57,7 +58,7 @@ def search_gas_prices(location):
                 address = address.replace('\ue934', '').strip()  
                 
                 gas_prices.append({
-                    "name": name,
+                    "station_name": name,
                     "price": price,
                     "address": address
                 })
