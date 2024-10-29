@@ -23,7 +23,7 @@ def search_gas_prices(location):
     driver.get("https://www.google.com/maps")
     
     search_box = driver.find_element(By.NAME, "q")
-    search_box.send_keys(f"chevron gas stations near {location}")
+    search_box.send_keys(f"gas stations near {location}")
     search_box.send_keys(Keys.RETURN)
     
     time.sleep(10)
@@ -58,7 +58,7 @@ if __name__ == "__main__":
     gas_prices = search_gas_prices(location)
     
     if gas_prices:
-        print("Chevron gas stations near", location)
+        print('Results: ')
         for station in gas_prices:
             print(station)
     else:
