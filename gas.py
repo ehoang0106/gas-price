@@ -6,6 +6,10 @@ from selenium.webdriver.chrome.options import Options
 from webdriver_manager.chrome import ChromeDriverManager
 import time
 import re
+import boto3
+from time import strftime
+import pytz
+from datetime import datetime
 
 def init_driver():
     options = Options()
@@ -17,6 +21,20 @@ def init_driver():
     options.add_experimental_option('excludeSwitches', ['enable-logging'])
     driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)   
     return driver
+
+def insert_into_dynamodb(date, station_name, price, address):
+    dynamodb = boto3.resource('dynamodb', region_name='us-west-1')
+    table = dynamodb.Table('GasPrices')
+    
+    response = table.put_item(
+        Item={
+            'date': date,
+            'station_name': station_name,
+            'price': price,
+            'address': address
+        }
+    )
+    return response
 
 def search_gas_prices(location):
     driver = init_driver()
@@ -34,33 +52,46 @@ def search_gas_prices(location):
     
     #loop through each gas station result
     for result in results:
-        name = result.find_element(By.CLASS_NAME, "NrDZNb").text #get the name of the gas station
+        #get the name of the gas station
+        name = result.find_element(By.CLASS_NAME, "NrDZNb").text 
         
-        if result.find_elements(By.CLASS_NAME, "ah5Ghc"):
-            price = result.find_element(By.CLASS_NAME, "ah5Ghc").text #get the gas price
+        #get the gas price
+        
+        price_element = result.find_element(By.CLASS_NAME, "ah5Ghc")
+        price = price_element.text if price_element else ""
+        
+        #remove stations without gas prices
+        if not re.search(r'\d+\.\d+', price):
+            price = ""
         else:
-            price = "No gas price found."
+            price = price.replace(' *', '')
         
-        if not re.search(r'\d+\.\d+', price): #get rid of the station does not has gas price, like costo gas
-            price = "No gas price found."
+        #split the price into value and type
+        price_value, price_type = (price.split('/') + [""])[:2]
         
+        
+        #get the address of the gas station
         spans = result.find_elements(By.CLASS_NAME, "W4Efsd")
-        
         if len(spans) > 2:
             address = spans[2].text
         else:
-            address = "No address found."
-            
-        #remove the unicode character, this is an icon for a wheelchair
-        address = address.replace('\ue934', '').strip()
-        address = address.replace('Gas station · ', '').strip() # remove the "Gas station · " is a prefix for the address
+            address = ""
         
-        price = price.replace(' *', '').strip() #remove the * character in price
+        #remove the wheelchair icon from the address, remove Gas station · and ·
+        address = address.replace('\ue934', '').replace('Gas station · ', '').replace('· ', '').strip() 
+        date = datetime.now(pytz.timezone('America/Los_Angeles')).strftime("%Y-%m-%d %H:%M:%S")
+        
         gas_prices.append({
+            "date": date,
             "station_name": name,
-            "price": price,
+            "price": price_value,
+            "price_type": price_type,
             "address": address
         })
+        
+        #insert into DynamoDB
+        #insert_into_dynamodb(date, name, price, address)
+        #time.sleep(2)
         
     driver.quit() #quit the driver
     
