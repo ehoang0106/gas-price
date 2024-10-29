@@ -22,7 +22,7 @@ def init_driver():
     driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)   
     return driver
 
-def insert_into_dynamodb(date, station_name, price, address):
+def insert_into_dynamodb(date, station_name, price_value, price_type, address):
     dynamodb = boto3.resource('dynamodb', region_name='us-west-1')
     table = dynamodb.Table('GasPrices')
     
@@ -30,7 +30,8 @@ def insert_into_dynamodb(date, station_name, price, address):
         Item={
             'date': date,
             'station_name': station_name,
-            'price': price,
+            'price': price_value,
+            'price_type': price_type,
             'address': address
         }
     )
@@ -62,7 +63,7 @@ def search_gas_prices(location):
         
         #remove stations without gas prices
         if not re.search(r'\d+\.\d+', price):
-            price = ""
+            continue
         else:
             price = price.replace(' *', '')
         
@@ -75,7 +76,7 @@ def search_gas_prices(location):
         if len(spans) > 2:
             address = spans[2].text
         else:
-            address = ""
+            continue
         
         #remove the wheelchair icon from the address, remove Gas station · and ·
         address = address.replace('\ue934', '').replace('Gas station · ', '').replace('· ', '').strip() 
@@ -90,8 +91,8 @@ def search_gas_prices(location):
         })
         
         #insert into DynamoDB
-        #insert_into_dynamodb(date, name, price, address)
-        #time.sleep(2)
+        #insert_into_dynamodb(date, name, price_value, price_type, address)
+        #time.sleep(1)
         
     driver.quit() #quit the driver
     
