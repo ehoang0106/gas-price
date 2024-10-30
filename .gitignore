@@ -5,3 +5,4 @@ out.html
 /terraform/terraform.tfstate.backup
 /terraform/terraform.tfstate
 .env
+__pycache__

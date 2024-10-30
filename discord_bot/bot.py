@@ -2,7 +2,8 @@ import discord
 from discord.ext import commands
 from dotenv import dotenv_values
 import requests
-from gas import search_gas_prices
+from gas_price import search_gas_prices
+
 
 config = dotenv_values(".env")
 TOKEN = config['DISCORD_TOKEN']
