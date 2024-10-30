@@ -1,3 +1,4 @@
+import json
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
@@ -24,7 +25,7 @@ def init_driver():
 
 def insert_into_dynamodb(date, station_name, price_value, price_type, address):
     dynamodb = boto3.resource('dynamodb', region_name='us-west-1')
-    table = dynamodb.Table('GasPrices')
+    table = dynamodb.Table('GasPricesTracker')
     
     response = table.put_item(
         Item={
@@ -36,7 +37,6 @@ def insert_into_dynamodb(date, station_name, price_value, price_type, address):
         }
     )
     return response
-
 def search_gas_prices(location):
     driver = init_driver()
     time.sleep(5) #wait for the driver to initialize in case of slow machine
@@ -82,6 +82,7 @@ def search_gas_prices(location):
         address = address.replace('\ue934', '').replace('Gas station · ', '').replace('· ', '').strip() 
         date = datetime.now(pytz.timezone('America/Los_Angeles')).strftime("%Y-%m-%d %H:%M:%S")
         
+        #append to the list to print out the result later
         gas_prices.append({
             "date": date,
             "station_name": name,
