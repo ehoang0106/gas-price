@@ -24,7 +24,7 @@ async def on_ready():
 
 @bot.command(name="gas")
 async def gas(ctx):
-  await ctx.send("I'm searching for gas prices near you. Please wait a moment...")
+  await ctx.send("I'm searching for gas prices Garden Grove, CA.\n Please wait a moment...")
   url = f'https://api.github.com/repos/{OWNER}/{REPO}/actions/workflows/{WORKFLOW_ID}/dispatches'
   
   headers = { 'Authorization': f'token {GITHUB_TOKEN}' }
@@ -38,9 +38,10 @@ async def gas(ctx):
     if gas_prices:
         print('Results: ')
         for station in gas_prices:
-          await ctx.send(f"Station Name: {station['station_name']}\nPrice: {station['price']}\nAddress: {station['address']}\n")
+          print(station)
+          await ctx.send(f"Station Name: {station['station_name']}\nPrice: {station['price']}\nAddress: {station['address']}\n-------------------")
     else:
-      await ctx.send("I'm sorry, I was unable to dispatch a workflow to search for gas prices near you. Please try again later.")
+      await ctx.send("An error occurred while searching for gas prices.")
     
 
   
