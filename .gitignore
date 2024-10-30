@@ -4,3 +4,4 @@ out.html
 /terraform/.terraform.lock.hcl
 /terraform/terraform.tfstate.backup
 /terraform/terraform.tfstate
+.env
