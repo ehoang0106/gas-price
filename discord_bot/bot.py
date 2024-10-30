@@ -17,7 +17,7 @@ bot = discord.Client()
 bot = commands.Bot(command_prefix=PREFIX)
 
 #setup gihub api
-
+#this setup is to trigger the github action to run the gas price search
 url = f'https://api.github.com/repos/{OWNER}/{REPO}/actions/workflows/{WORKFLOW_ID}/dispatches'
 headers = { 'Authorization': f'token {GITHUB_TOKEN}' }
 payload = { 'ref': 'master' }
@@ -32,7 +32,7 @@ async def on_ready():
   await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.watching, name="gas prices"))
 
 @bot.command(name="gas")
-async def gas(ctx, *, location):
+async def gas(ctx, *, location): # * is get all the arguments after the command
   await ctx.send(f"I'm searching for gas prices {location}.\n Please wait a moment...")
   
   if response.status_code == 204:
