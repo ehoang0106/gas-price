@@ -92,7 +92,7 @@ def search_gas_prices(location):
         
         #insert into DynamoDB
         insert_into_dynamodb(date, name, price_value, price_type, address)
-        time.sleep(1) #wait for 1 second before moving to the next gas station to avoid bottle neck on the database
+        time.sleep(5) #wait for 1 second before moving to the next gas station to avoid bottle neck on the database
         
     driver.quit() #quit the driver
     
