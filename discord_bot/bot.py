@@ -3,7 +3,7 @@ from discord.ext import commands
 from dotenv import dotenv_values
 import requests
 from gas_price import search_gas_prices
-
+import time
 
 config = dotenv_values(".env")
 TOKEN = config['DISCORD_TOKEN']
@@ -49,6 +49,10 @@ async def gas(ctx, *, location): # * is get all the arguments after the command
         await ctx.send(f"✅ Here are the gas stations near **{location}** I found.")
     else:
       await ctx.send("An error occurred while searching for gas prices.")
-  
+      
+    time.sleep(5)
+    await ctx.send("GitHub Action also completed successfully.")
+  else:
+    await ctx.send("GitHub Action failed to run.") 
   
 bot.run(TOKEN)
