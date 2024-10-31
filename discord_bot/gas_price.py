@@ -72,11 +72,11 @@ def search_gas_prices(location):
         #split the price into value and type
         price_value, price_type = (price.split('/') + [""])[:2]
         
-        
         #get the address of the gas station
         spans = result.find_elements(By.CLASS_NAME, "W4Efsd")
         if len(spans) > 2:
             address = spans[2].text
+            
         else:
             continue
         
@@ -106,11 +106,12 @@ def search_gas_prices(location):
         insert_into_dynamodb(date, name, price_value, price_type, address)
         time.sleep(2) #wait for 1 second before moving to the next gas station to avoid bottle neck on the database
         
+    count = len(gas_prices) #count the number of gas stations found
         
     driver.quit() #quit the driver
     
     
-    return gas_prices
+    return gas_prices, count
 
 
 

@@ -34,16 +34,16 @@ async def on_ready():
 
 @bot.command(name="gas")
 async def gas(ctx, *, location): # * is get all the arguments after the command
-  await ctx.send(f"I'm searching for gas prices in {location}.\n Please wait a moment...\n")
+  await ctx.send(f"I'm searching for gas prices in {location}.\nPlease wait a moment...\n")
   
   #call api to trigger the github action
   #response = requests.post(url, headers=headers, json=payload)
   
   #if response.status_code == 204:
-  gas_prices = search_gas_prices(location)
+  gas_prices, count = search_gas_prices(location)
+  await ctx.send(f"\n✅ Here are ***`{count}`*** the gas stations near **{location}** that I found.\n")
   if gas_prices:
       print('Results: ')
-      await ctx.send(f"✅ Here are the gas stations near **{location}** I found.\n")
       for station in gas_prices:
         print(station)
         
