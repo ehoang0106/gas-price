@@ -1,4 +1,4 @@
-name: Trigger Workflow from Raspberry Pi
+name: Spit-data-to-dynamodb
 
 on: workflow_dispatch
 
@@ -34,3 +34,5 @@ jobs:
 
       - name: Run gas.py script to spit data to DynamoDB
         run: python discord_bot/gas_price.py
+
+
