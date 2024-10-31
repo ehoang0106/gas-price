@@ -75,7 +75,7 @@ def search_gas_prices(location):
         
         #get the address of the gas station
         spans = result.find_elements(By.CLASS_NAME, "W4Efsd")
-        if len(spans) > 3:
+        if len(spans) > 2:
             address = spans[2].text
         else:
             continue
