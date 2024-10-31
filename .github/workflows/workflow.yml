@@ -21,18 +21,31 @@ jobs:
           echo "aws_secret_access_key=${AWS_SECRET_ACCESS_KEY}" >> ~/.aws/credentials
           echo "region=${AWS_DEFAULT_REGION}" >> ~/.aws/credentials
       
-      #https://github.com/actions/setup-python
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.12'
+  
+  terraform:
+    name: 'Terraform'
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: bash
+        working-directory: ./terraform
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
 
-      - name: Install dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install -r requirements.txt      
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v1
+      
+      - name: Terraform Init
+        run: terraform init
 
-      - name: Run gas.py script to spit data to DynamoDB
-        run: python discord_bot/gas_price.py
+      - name: Terraform Plan
+        run: terraform plan
+      
+      - name: Terraform Apply
+        run: terraform apply -auto-approve
+        
+
+
 
 
