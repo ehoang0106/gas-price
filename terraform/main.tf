@@ -24,7 +24,7 @@ resource "aws_cloudwatch_metric_alarm" "dynamodb_write_capacity_alarm" {
   threshold           = 5
   alarm_description   = "Alarm when write capacity units exceed 5 in 12 hours"
   dimensions = {
-    TableName = aws_dynamodb_table.GasPricesTracker.name
+    TableName = aws_dynamodb_table.GasPrices.name
   }
 
   alarm_actions = [
