@@ -84,6 +84,7 @@ def search_gas_prices(location):
         
         # Create a variable to format the address into a URL
         formatted_address = address.replace(' ', '+')
+        
         map_url = f"[Map Direction](https://www.google.com/maps/place/{formatted_address})"
         
         date = datetime.now(pytz.timezone('America/Los_Angeles')).strftime("%Y-%m-%d %H:%M:%S")
@@ -102,9 +103,13 @@ def search_gas_prices(location):
         #insert_into_dynamodb(date, name, price_value, price_type, address)
         time.sleep(1) #wait for 1 second before moving to the next gas station to avoid bottle neck on the database
         
+        
     driver.quit() #quit the driver
+    print('-----------------------------------------')
+    print(gas_prices)
+    print('-----------------------------------------')
     
-    return gas_prices, date, name, price_value, price_type, address
+    return gas_prices
 
 
 
@@ -113,7 +118,6 @@ if __name__ == "__main__":
     gas_prices = search_gas_prices(location)
     
     if gas_prices:
-        print('Results: ')
         for station in gas_prices:
             print(station)
             time.sleep(2)
