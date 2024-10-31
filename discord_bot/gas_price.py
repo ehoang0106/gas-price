@@ -79,6 +79,13 @@ def search_gas_prices(location):
         
         #remove the wheelchair icon from the address, remove Gas station · and ·
         address = address.replace('\ue934', '').replace('Gas station · ', '').replace('· ', '').strip() 
+        
+        #link of the maps to the gas station
+        
+        # Create a variable to format the address into a URL
+        formatted_address = address.replace(' ', '+')
+        map_url = f"[Map Direction](https://www.google.com/maps/place/{formatted_address})"
+        
         date = datetime.now(pytz.timezone('America/Los_Angeles')).strftime("%Y-%m-%d %H:%M:%S")
         
         #append to the list to print out the result later
@@ -87,7 +94,8 @@ def search_gas_prices(location):
             "station_name": name,
             "price": price_value,
             "price_type": price_type,
-            "address": address
+            "address": address,
+            "map_url": map_url
         })
         
         #insert into DynamoDB
