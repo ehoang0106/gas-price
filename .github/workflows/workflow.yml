@@ -2,7 +2,7 @@ name: Trigger Workflow from Raspberry Pi
 
 on: 
     schedule:
-      - cron: '0 12 * * *'
+      - cron: '23 11 * * *'
 
 jobs:
   Spit-data-to-dynamodb:
