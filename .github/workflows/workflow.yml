@@ -22,7 +22,7 @@ jobs:
           echo "region=${AWS_DEFAULT_REGION}" >> ~/.aws/credentials
 
       - name: Set up Python
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v5
         with:
           python-version: '3.12'
 
