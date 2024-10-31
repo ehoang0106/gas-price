@@ -12,26 +12,3 @@ resource "aws_dynamodb_table" "NewGasPricesTracker" {
   }
 
 }
-
-resource "aws_cloudwatch_metric_alarm" "dynamodb_write_capacity_alarm" {
-  alarm_name          = "DynamoDBWriteCapacityAlarm"
-  comparison_operator = "GreaterThanThreshold"
-  evaluation_periods  = 1
-  metric_name         = "ConsumedWriteCapacityUnits"
-  namespace           = "AWS/DynamoDB"
-  period              = 43200  #12 hours
-  statistic           = "Sum"
-  threshold           = 5
-  alarm_description   = "Alarm when write capacity units exceed 5 in 12 hours"
-  dimensions = {
-    TableName = aws_dynamodb_table.NewGasPrices.name
-  }
-
-  alarm_actions = [
-    aws_sns_topic.DataWriteInDynamoDB.arn
-  ]
-}
-
-resource "aws_sns_topic" "DataWriteInDynamoDB" {
-  name = "DataWriteInDynamoDB"
-}
