@@ -58,7 +58,10 @@ def search_gas_prices(location):
         #get the gas price
         
         price_element = result.find_element(By.CLASS_NAME, "ah5Ghc")
-        price = price_element.text if price_element else ""
+        if price_element:
+            price = price_element.text 
+        else:
+            price = ""
         
         #remove stations without gas prices
         if not re.search(r'\d+\.\d+', price):
@@ -72,7 +75,7 @@ def search_gas_prices(location):
         
         #get the address of the gas station
         spans = result.find_elements(By.CLASS_NAME, "W4Efsd")
-        if len(spans) > 2:
+        if len(spans) > 3:
             address = spans[2].text
         else:
             continue
@@ -101,7 +104,7 @@ def search_gas_prices(location):
         
         #insert into DynamoDB
         #insert_into_dynamodb(date, name, price_value, price_type, address)
-        time.sleep(3) #wait for 1 second before moving to the next gas station to avoid bottle neck on the database
+        time.sleep(2) #wait for 1 second before moving to the next gas station to avoid bottle neck on the database
         
         
     driver.quit() #quit the driver
@@ -118,6 +121,5 @@ if __name__ == "__main__":
     if gas_prices:
         for station in gas_prices:
             print(station)
-            time.sleep(2)
     else:
         print({"message": "No gas prices found."})
