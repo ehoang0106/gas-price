@@ -42,17 +42,20 @@ async def gas(ctx, *, location): # * is get all the arguments after the command
     gas_prices = search_gas_prices(location)
     if gas_prices:
         print('Results: ')
+        await ctx.send(f"✅ Here are the gas stations near **{location}** I found.\n")
         for station in gas_prices:
           print(station)
+          
           await ctx.send("\n**--Gas Station--**\n")
           await ctx.send(f"```---------------\n⛽ Station Name: {station['station_name']}\n💵 Price: {station['price']}\n🗺️ Address: {station['address']}\n```\n{station['map_url']}\n")
-        await ctx.send(f"✅ Here are the gas stations near **{location}** I found.")
     else:
       await ctx.send("An error occurred while searching for gas prices.")
       
+    await ctx.send("\n-----------------------------------------\n🖥️ Triggering GitHub Action to spread into DynamoDB...")
     time.sleep(5)
-    await ctx.send("GitHub Action also completed successfully.")
+    await ctx.send("✅ GitHub Action also completed successfully.")
   else:
-    await ctx.send("GitHub Action failed to run.") 
+    await ctx.send("❌ GitHub Action failed to run.") 
+  
   
 bot.run(TOKEN)

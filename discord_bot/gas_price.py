@@ -104,7 +104,9 @@ def search_gas_prices(location):
         
     driver.quit() #quit the driver
     
-    return gas_prices
+    return gas_prices, date, name, price_value, price_type, address
+
+
 
 if __name__ == "__main__":
     location = "Garden Grove, CA"
@@ -114,5 +116,6 @@ if __name__ == "__main__":
         print('Results: ')
         for station in gas_prices:
             print(station)
+            time.sleep(2)
     else:
         print({"message": "No gas prices found."})
