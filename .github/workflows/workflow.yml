@@ -1,4 +1,4 @@
-name: Spit-data-to-dynamodb
+name: Terraform
 
 on: workflow_dispatch
 
