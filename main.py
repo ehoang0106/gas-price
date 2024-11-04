@@ -56,5 +56,5 @@ if __name__ == "__main__":
         for station in gas_prices:
             print(station)
     else:
-        print({"message": "No gas prices found."})
+        print({"message": "No gas prices found"})
 
