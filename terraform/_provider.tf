@@ -6,9 +6,9 @@ terraform {
   }
 
   backend "s3" {
-    bucket = "terraform-state-khoahoang"
+    bucket = "terraform_state_bucket"
     key = "terraform_state_for_gasprices"
-    region = "us-east-1"
+    region = "us-west-1"
   }
 }
 
