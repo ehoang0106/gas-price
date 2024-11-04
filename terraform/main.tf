@@ -13,5 +13,5 @@ resource "aws_dynamodb_table" "GasPricesTracking" {
 }
 
 resource "aws_s3_bucket" "terraform_state_bucket" {
-  bucket = "terraform_state_bucket"
+  bucket = "TerraformStateBucket"
 }
