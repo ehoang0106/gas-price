@@ -5,11 +5,11 @@ terraform {
     }
   }
 
-  # backend "s3" {
-  #   bucket = "terraform_state_bucket"
-  #   key = "terraform_state_for_gasprices"
-  #   region = "us-west-1"
-  # }
+  backend "s3" {
+    bucket = "terraform-state-khoahoang"
+    key    = "terraform_state_price_tracker"
+    region = "us-east-1"
+  }
 }
 
 provider "aws" {

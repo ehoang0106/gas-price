@@ -11,7 +11,3 @@ resource "aws_dynamodb_table" "GasPricesTracking" {
     type = "S"
   }
 }
-
-resource "aws_s3_bucket" "tf_state_bucket" {
-  bucket = "tf-state-bucket"
-}
