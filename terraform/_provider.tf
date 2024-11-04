@@ -7,8 +7,8 @@ terraform {
 
   backend "s3" {
     bucket = "terraform-state-khoahoang"
-    key = "terraform_state"
-    region = "us-west-1"
+    key = "terraform_state_for_gasprices"
+    region = "us-east-1"
   }
 }
 
