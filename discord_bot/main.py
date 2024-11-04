@@ -8,8 +8,6 @@ from selenium.webdriver.chrome.options import Options
 import time
 import boto3
 import re
-import pytz
-from datetime import datetime
 
 def init_driver():
     options = Options()
@@ -67,16 +65,12 @@ def search_gas_prices(location):
         gas_type = gas_type.replace("*", "")
         price = (gas_price.contents)[0].split("/")[0]
         
-        date = datetime.now(pytz.timezone('America/Los_Angeles')).strftime("%Y-%m-%d %H:%M:%S")
-        
-        
-        gas_prices.append({'date': date, 'station_name': station_name.contents[0],'gas_type': gas_type ,'price': price, 'address': address})
-        
+        gas_prices.append({'station_name': station_name.contents[0],'gas_type': gas_type ,'price': price, 'address': address})
 
-
-    
+    if gas_prices:
+        lowest_price_station = min(gas_prices, key=lambda x: float(x['price'].replace('$', '')))
+        print(f"Lowest price: {lowest_price_station['price']} at {lowest_price_station['station_name']} ({lowest_price_station['address']})")
     driver.quit()
-    
     
     return gas_prices
 
