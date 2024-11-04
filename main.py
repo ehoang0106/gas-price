@@ -5,16 +5,9 @@ from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.chrome.options import Options
-from webdriver_manager.chrome import ChromeDriverManager
 import time
-options = webdriver.ChromeOptions()
-options.add_argument("--headless")
-
-driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
-
-
-soup = BeautifulSoup(driver.page_source, 'html.parser')
-prices = []
+import boto3
+import re
 
 def init_driver():
     options = Options()
@@ -27,12 +20,29 @@ def init_driver():
     driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)   
     return driver
 
-def search_gas_prices():
+def insert_into_dynamodb(date, station_name, price_value, price_type, address):
+    dynamodb = boto3.resource('dynamodb', region_name='us-west-1')
+    table = dynamodb.Table('GasPricesTracking')
+    
+    response = table.put_item(
+        Item={
+            'date': date,
+            'station_name': station_name,
+            'price': price_value,
+            'price_type': price_type,
+            'address': address
+        }
+    )
+    return response
+
+def search_gas_prices(location):
     driver = init_driver()
     time.sleep(5) #wait for the driver to initialize in case of slow machine
-    url = "https://www.google.com/search?q=chevron+gas+station+near+Garden+Grove"
+    formatted_location = location.replace(" ", "+")
+    url = f"https://www.google.com/search?q=chevron+gas+station+near+{formatted_location}"
     driver.get(url)
     
+    soup = BeautifulSoup(driver.page_source, 'html.parser')
     stations = soup.find_all("div", attrs={'class': 'VkpGBb'})
     gas_prices = []
     for station in stations:
@@ -40,21 +50,36 @@ def search_gas_prices():
         if gas_price is None:
             continue
         station_name = station.find('span', attrs={'class': 'OSrXXb'})
+        
+        #address
+        address_div = station.find('div', attrs={'class': 'rllt__details'})
+        if address_div:
+            address = address_div.contents[1].text
+        else:
+            address = "Address not found"
+        #remove the dot character and phone number of the station
+        address = re.sub(r' · \(\d{3}\) \d{3}-\d{4}', '', address)
+        
+        
         gas_type = (gas_price.contents)[0].split("/")[1]
         gas_type = gas_type.replace("*", "")
-        gas_prices.append({'station_name': station_name.contents[0],'gas_type': gas_type ,'price': gas_price})
-    
+        price = (gas_price.contents)[0].split("/")[0]
+        
+        gas_prices.append({'station_name': station_name.contents[0],'gas_type': gas_type ,'price': price, 'address': address})
+
+    if gas_prices:
+        lowest_price_station = min(gas_prices, key=lambda x: float(x['price'].replace('$', '')))
+        print(f"Lowest price: {lowest_price_station['price']} at {lowest_price_station['station_name']} ({lowest_price_station['address']})")
     driver.quit()
     
     return gas_prices
 
 if __name__ == "__main__":
     location = "Garden Grove, CA"
-    gas_prices = search_gas_prices()
+    gas_prices = search_gas_prices(location)
     
     if gas_prices:
         for station in gas_prices:
             print(station)
     else:
         print({"message": "No gas prices found"})
-
