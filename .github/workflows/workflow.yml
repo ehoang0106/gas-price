@@ -7,7 +7,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: read # This is required for actions/checkout
   id-token: write   # This is required for requesting the JWT
 
 jobs:
@@ -29,6 +29,7 @@ jobs:
         uses: aws-actions/configure-aws-credentials@v1.7.0
         with:
           role-to-assume: ${{ secrets.AWS_ROLE_TO_ASSUME }}
+          role-session-name: 'GH_TO_AWS-VIA-OIDC'
           aws-region: us-west-1
       
       - name: Terraform Init
