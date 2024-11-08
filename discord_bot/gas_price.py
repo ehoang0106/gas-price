@@ -50,7 +50,7 @@ def search_gas_prices(location):
     gas_prices = [] #gas prices list
     results = driver.find_elements(By.CLASS_NAME, "Nv2PK") #this class is for each gas station result
     
-    #loop through each gas station result
+    #loop through each gas station results
     for result in results:
         #get the name of the gas station
         name = result.find_element(By.CLASS_NAME, "NrDZNb").text 
