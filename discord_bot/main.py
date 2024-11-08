@@ -8,6 +8,8 @@ from selenium.webdriver.chrome.options import Options
 import time
 import boto3
 import re
+from datetime import datetime
+import pytz
 
 def init_driver():
     options = Options()
@@ -66,11 +68,19 @@ def search_gas_prices(location):
         price = (gas_price.contents)[0].split("/")[0]
         
         gas_prices.append({'station_name': station_name.contents[0],'gas_type': gas_type ,'price': price, 'address': address})
-
+        
+        date = datetime.now(pytz.timezone('America/Los_Angeles')).strftime("%Y-%m-%d %H:%M:%S")
+        
+        #insert into DynamoDB
+        insert_into_dynamodb(date, station_name, price, gas_type, address)
+        time.sleep(2) #wait for 1 second before moving to the next gas station to avoid bottle neck on the database
+        
     if gas_prices:
         lowest_price_station = min(gas_prices, key=lambda x: float(x['price'].replace('$', '')))
         print(f"Lowest price: {lowest_price_station['price']} at {lowest_price_station['station_name']} ({lowest_price_station['address']})")
     driver.quit()
+    
+    
     
     return gas_prices
 
