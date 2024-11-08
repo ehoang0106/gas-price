@@ -22,7 +22,7 @@ def init_driver():
     driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)   
     return driver
 
-def insert_into_dynamodb(date, station_name, price_value, price_type, address):
+def insert_into_dynamodb(date, station_name, price, gas_type, address):
     dynamodb = boto3.resource('dynamodb', region_name='us-west-1')
     table = dynamodb.Table('GasPricesTracking')
     
@@ -30,8 +30,8 @@ def insert_into_dynamodb(date, station_name, price_value, price_type, address):
         Item={
             'date': date,
             'station_name': station_name,
-            'price': price_value,
-            'price_type': price_type,
+            'price': price,
+            'gas_type': gas_type,
             'address': address
         }
     )
@@ -51,12 +51,12 @@ def search_gas_prices(location):
         gas_price = station.find('span', attrs={'class': 'pxqAo iqLmSe OSrXXb Q1JCAd CGu9B'})
         if gas_price is None:
             continue
-        station_name = station.find('span', attrs={'class': 'OSrXXb'})
+        station_name = station.find('span', attrs={'class': 'OSrXXb'}).get_text()
         
         #address
         address_div = station.find('div', attrs={'class': 'rllt__details'})
         if address_div:
-            address = address_div.contents[1].text
+            address = address_div.contents[1].get_text()
         else:
             address = "Address not found"
         #remove the dot character and phone number of the station
@@ -67,7 +67,7 @@ def search_gas_prices(location):
         gas_type = gas_type.replace("*", "")
         price = (gas_price.contents)[0].split("/")[0]
         
-        gas_prices.append({'station_name': station_name.contents[0],'gas_type': gas_type ,'price': price, 'address': address})
+        gas_prices.append({'station_name': station_name,'gas_type': gas_type ,'price': price, 'address': address})
         
         date = datetime.now(pytz.timezone('America/Los_Angeles')).strftime("%Y-%m-%d %H:%M:%S")
         
@@ -75,9 +75,7 @@ def search_gas_prices(location):
         insert_into_dynamodb(date, station_name, price, gas_type, address)
         time.sleep(2) #wait for 1 second before moving to the next gas station to avoid bottle neck on the database
         
-    if gas_prices:
-        lowest_price_station = min(gas_prices, key=lambda x: float(x['price'].replace('$', '')))
-        print(f"Lowest price: {lowest_price_station['price']} at {lowest_price_station['station_name']} ({lowest_price_station['address']})")
+        
     driver.quit()
     
     
