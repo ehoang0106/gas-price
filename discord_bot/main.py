@@ -47,6 +47,7 @@ def search_gas_prices(location):
     soup = BeautifulSoup(driver.page_source, 'html.parser')
     stations = soup.find_all("div", attrs={'class': 'VkpGBb'})
     gas_prices = []
+    lowest_price = []
     for station in stations:
         gas_price = station.find('span', attrs={'class': 'pxqAo iqLmSe OSrXXb Q1JCAd CGu9B'})
         if gas_price is None:
@@ -66,15 +67,16 @@ def search_gas_prices(location):
         gas_type = (gas_price.contents)[0].split("/")[1]
         gas_type = gas_type.replace("*", "")
         price = (gas_price.contents)[0].split("/")[0]
+        price_value = float(price.replace("$", ""))
         
-        gas_prices.append({'station_name': station_name,'gas_type': gas_type ,'price': price, 'address': address})
+        
+        gas_prices.append({'station_name': station_name,'gas_type': gas_type ,'price': price,'price_value': price_value, 'address': address})
         
         date = datetime.now(pytz.timezone('America/Los_Angeles')).strftime("%Y-%m-%d %H:%M:%S")
         
         #insert into DynamoDB
-        insert_into_dynamodb(date, station_name, price, gas_type, address)
-        time.sleep(2) #wait for 1 second before moving to the next gas station to avoid bottle neck on the database
-        
+        # insert_into_dynamodb(date, station_name, price, gas_type, address)
+        # time.sleep(2) #wait for 1 second before moving to the next gas station to avoid bottle neck on the database
         
     driver.quit()
     
