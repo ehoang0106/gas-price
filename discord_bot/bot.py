@@ -41,7 +41,7 @@ async def gas(ctx, *, location): # * is get all the arguments after the command
   #response = requests.post(url, headers=headers, json=payload)
   
   #if response.status_code == 204:
-  gas_prices = search_gas_prices(location)
+  gas_prices, lowest_price_station = search_gas_prices(location)
   
   if gas_prices:
       print('Results: ')
@@ -53,5 +53,9 @@ async def gas(ctx, *, location): # * is get all the arguments after the command
         
   else:
     await ctx.send("An error occurred while searching for gas prices.")
+    
+  if lowest_price_station:
+    for key, value in lowest_price_station.items():
+      print(f"{key}: {value}")
   
 bot.run(TOKEN)

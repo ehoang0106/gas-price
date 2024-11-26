@@ -92,10 +92,16 @@ def search_gas_prices(location):
 
 if __name__ == "__main__":
     location = "Garden Grove, CA"
-    gas_prices = search_gas_prices(location)
+    gas_prices, lowest_price_station = search_gas_prices(location)
     
     if gas_prices:
         for station in gas_prices:
             print(station)
     else:
         print({"message": "No gas prices found"})
+    
+    print(type(gas_prices))
+    
+    print("Lowest price station: ")
+    print(lowest_price_station)
+    print(type(lowest_price_station))
