@@ -45,17 +45,19 @@ async def gas(ctx, *, location): # * is get all the arguments after the command
   
   if gas_prices:
       print('Results: ')
+      await ctx.send("\n**Found 3️⃣ Gas Stations near you: **\n")
       for station in gas_prices:
         print(station)
-        
-        await ctx.send("\n**--Gas Station--**\n")
         await ctx.send(f"```---------------\n⛽ Station Name: {station['station_name']}\n💵 Price: {station['price']}\n🗺️ Address: {station['address']}\n```")
         
   else:
     await ctx.send("An error occurred while searching for gas prices.")
     
   if lowest_price_station:
-    for key, value in lowest_price_station.items():
-      print(f"{key}: {value}")
+    await ctx.send("\n-----------------------------------\n")
+    await ctx.send("\n**✅ Here is the Gas Station with the lowest price: **\n")
+    await ctx.send(f"```---------------\n⛽ Station Name: {lowest_price_station['station_name']}\n💵 Price: {lowest_price_station['price']}\n🗺️ Address: {lowest_price_station['address']}\n```")
+  else:
+      await ctx.send("An error occurred while searching for the lowest price gas station.")
   
 bot.run(TOKEN)
