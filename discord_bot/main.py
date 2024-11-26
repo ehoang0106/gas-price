@@ -71,8 +71,14 @@ def search_gas_prices(location):
         
         
         gas_prices.append({'station_name': station_name,'gas_type': gas_type ,'price': price,'price_value': price_value, 'address': address})
+        lowest_price.append(price_value);
+        
+        min_price = min(lowest_price);
+        if price_value == min_price:
+            lowest_price_station = {'station_name': station_name,'gas_type': gas_type ,'price': price,'price_value': price,'address': address}
         
         date = datetime.now(pytz.timezone('America/Los_Angeles')).strftime("%Y-%m-%d %H:%M:%S")
+        
         
         #insert into DynamoDB
         # insert_into_dynamodb(date, station_name, price, gas_type, address)
@@ -82,7 +88,7 @@ def search_gas_prices(location):
     
     
     
-    return gas_prices
+    return gas_prices, lowest_price_station
 
 if __name__ == "__main__":
     location = "Garden Grove, CA"
