@@ -6,4 +6,4 @@ out.html
 /terraform/terraform.tfstate
 .env
 __pycache__
-m.py
+.././m.py
