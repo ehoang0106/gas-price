@@ -45,7 +45,7 @@ async def gas(ctx, *, location): # * is get all the arguments after the command
   
   if gas_prices:
       print('Results: ')
-      await ctx.send("\n**Found 3️⃣ Gas Stations near you: **\n")
+      await ctx.send("\n**Found :three: Gas Stations near you: **\n")
       for station in gas_prices:
         print(station)
         await ctx.send(f"```---------------\n⛽ Station Name: {station['station_name']}\n💵 Price: {station['price']}\n🗺️ Address: {station['address']}\n```")
