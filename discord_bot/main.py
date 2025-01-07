@@ -24,7 +24,7 @@ def init_driver():
 
 def insert_into_dynamodb(date, station_name, price, gas_type, address):
     dynamodb = boto3.resource('dynamodb', region_name='us-west-1')
-    table = dynamodb.Table('GasPricesTracker')
+    table = dynamodb.Table('GasPricesTracking')
     
     response = table.put_item(
         Item={
