@@ -1,5 +1,5 @@
 resource "aws_dynamodb_table" "GasPricesTracking" {
-  name = "GasPricesTracking"
+  name = "GasPricesTracker"
   billing_mode = "PROVISIONED"
   read_capacity = 5
   write_capacity = 10
