@@ -20,7 +20,7 @@ async def on_ready():
     await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.watching, name="gas prices"))
 
 
-@tasks.loop(hours=12)  
+@tasks.loop(hours=24)  
 async def send_gas_prices():
     channel = bot.get_channel(int(CHANNEL_ID))
     if channel:
