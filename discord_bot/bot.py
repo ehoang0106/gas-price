@@ -18,6 +18,7 @@ bot = commands.Bot(command_prefix=PREFIX)
 async def on_ready():
     print(f'{bot.user} has connected to Discord!')
     await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.watching, name="gas prices"))
+    send_gas_prices.start()
 
 
 @tasks.loop(hours=24)  
