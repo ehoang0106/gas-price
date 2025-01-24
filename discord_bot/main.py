@@ -102,6 +102,6 @@ if __name__ == "__main__":
     
     print(type(gas_prices))
     
-    print("Lowest price station: ")
+    print("Lowest price station: ") 
     print(lowest_price_station)
     print(type(lowest_price_station))
